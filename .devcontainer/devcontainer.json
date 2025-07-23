@@ -1,0 +1,39 @@
+{
+  "name": "Spring Boot + Angular DevContainer",
+  "image": "mcr.microsoft.com/devcontainers/java:17",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "INSTALLMAVEN": "true",
+      "MAVENVERSION": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": [
+    "apt-get update && apt-get install -y git",
+    "git config --global init.defaultBranch master",
+    "git init",
+    "npm install -g @angular/cli",
+    "ng new frontend --routing=true --style=css --skip-tests --ssr",
+    "cd frontend && npm install && cd ..",
+    "mvn archetype:generate -DgroupId=com.example -DartifactId=backend -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false",
+    "cd backend && curl -s https://start.spring.io/starter.tgz -d dependencies=web,devtools,lombok -d type=maven-project -d language=java -d bootVersion=3.2.0 -d baseDir=. | tar -xz",
+    "cd backend && ./mvnw clean install"
+  ],
+  "forwardPorts": [8080, 4200],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "angular.ng-template",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "redhat.java"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
+}
